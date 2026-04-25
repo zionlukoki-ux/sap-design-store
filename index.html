@@ -63,7 +63,12 @@ nav ul a:hover { color: var(--accent); }
 .cs-options div { padding: 0.5rem 0.8rem; color: var(--white); cursor: pointer; transition: background 0.15s; white-space: nowrap; }
 .cs-options div:hover { background: var(--accent); color: var(--white); }
 .custom-select.open .cs-options { display: block; }
-@media(max-width:768px){ .switcher-wrap { display: none; } .mobile-nav .custom-select { display: block; } .mobile-nav .cs-selected { display: block; font-size: 0.9rem; padding: 0.5rem 0.8rem; } }
+@media(max-width:768px){ 
+  .switcher-wrap { display: none; } 
+  .mobile-nav .custom-select { display: block !important; } 
+  .mobile-nav .cs-selected { display: block !important; font-size: 0.9rem; padding: 0.5rem 0.8rem; }
+  .mobile-nav > div:first-child { display: flex !important; }
+}
 .mobile-nav .custom-select .cs-options { position: relative; top: 0; margin-top: 4px; }
 .nav-icon { width: 20px; height: 20px; stroke: rgba(247,244,239,0.65); fill: none; cursor: pointer; transition: stroke 0.2s; }
 .nav-icon:hover { stroke: var(--accent); }
@@ -486,13 +491,6 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
 
 <!-- ════ MOBILE NAV ════ -->
 <div class="mobile-nav" id="mobileNav">
-  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('home'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('home'), 350)">Home</a>
-  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shop'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shop'), 350)">Shop</a>
-  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('lookbook'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('lookbook'), 350)">Lookbook</a>
-  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('about'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('about'), 350)">About</a>
-  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('sizing'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('sizing'), 350)">Sizing</a>
-  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shipping'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shipping'), 350)">Shipping</a>
-  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('contact'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('contact'), 350)">Contact</a>
   <div style="display:flex;gap:0.8rem;padding:1rem 0;border-bottom:1px solid var(--border);margin-bottom:1rem;">
     <div class="custom-select" id="langDropMob" style="flex:1;">
       <div class="cs-selected" style="width:100%;text-align:center;" onclick="toggleDrop('langDropMob')">🇬🇧 English</div>
@@ -511,6 +509,13 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
       </div>
     </div>
   </div>
+  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('home'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('home'), 350)">Home</a>
+  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shop'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shop'), 350)">Shop</a>
+  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('lookbook'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('lookbook'), 350)">Lookbook</a>
+  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('about'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('about'), 350)">About</a>
+  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('sizing'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('sizing'), 350)">Sizing</a>
+  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shipping'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shipping'), 350)">Shipping</a>
+  <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('contact'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('contact'), 350)">Contact</a>
   <div class="mobile-social">
     <a href="https://www.facebook.com/profile.php?id=100063587043419" target="_blank" rel="noopener" title="Facebook">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
@@ -521,7 +526,6 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
   </div>
   <p class="mob-foot">© 2025 SAP Design Store · Cape Town 🇿🇦</p>
 </div>
-
 <!-- ════ NAV ════ -->
 <nav>
   <div class="logo-zone">
