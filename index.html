@@ -464,13 +464,13 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
 
 <!-- ════ MOBILE NAV ════ -->
 <div class="mobile-nav" id="mobileNav">
-  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('home')">Home</a>
-  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('shop')">Shop</a>
-  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('lookbook')">Lookbook</a>
-  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('about')">About</a>
-  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('sizing')">Sizing</a>
-  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('shipping')">Shipping</a>
-  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('contact')">Contact</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('home'), 350)">Home</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shop'), 350)">Shop</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('lookbook'), 350)">Lookbook</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('about'), 350)">About</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('sizing'), 350)">Sizing</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shipping'), 350)">Shipping</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('contact'), 350)">Contact</a>
   <div class="mobile-social">
     <a href="https://www.facebook.com/profile.php?id=100063587043419" target="_blank" rel="noopener" title="Facebook">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
@@ -489,13 +489,12 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
     <span class="brand-name">SAP <span>DESIGN</span></span>
   </div>
   <ul>
-    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('home'), 350)">Home</a>
-    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shop'), 350)">Shop</a>
-    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('lookbook'), 350)">Lookbook</a>
-    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('about'), 350)">About</a>
-    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('sizing'), 350)">Sizing</a>
-    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shipping'), 350)">Shipping</a>
-    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('contact'), 350)">Contact</a>
+    <li><a href="#" onclick="event.preventDefault(); scrollToSection('shop')">Shop</a></li>
+    <li><a href="#" onclick="event.preventDefault(); scrollToSection('lookbook')">Lookbook</a></li>
+    <li><a href="#" onclick="event.preventDefault(); scrollToSection('about')">About</a></li>
+    <li><a href="#" onclick="event.preventDefault(); scrollToSection('sizing')">Sizing</a></li>
+    <li><a href="#" onclick="event.preventDefault(); scrollToSection('shipping')">Shipping</a></li>
+    <li><a href="#" onclick="event.preventDefault(); scrollToSection('contact')">Contact</a></li>
   </ul>
   <div class="nav-right">
     <div class="nav-social">
