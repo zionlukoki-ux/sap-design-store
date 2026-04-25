@@ -483,6 +483,18 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
   <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('sizing'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('sizing'), 350)">Sizing</a>
   <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shipping'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shipping'), 350)">Shipping</a>
   <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('contact'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('contact'), 350)">Contact</a>
+  <div style="display:flex;gap:0.8rem;padding:1rem 0;border-bottom:1px solid var(--border);margin-bottom:1rem;">
+    <select class="switcher" style="display:block;flex:1;" onchange="switchLang(this.value)" title="Language">
+      <option value="en">🇬🇧 English</option>
+      <option value="fr">🇫🇷 Français</option>
+    </select>
+    <select class="switcher" style="display:block;flex:1;" onchange="switchCurrency(this.value)" title="Currency">
+      <option value="ZAR">ZAR R</option>
+      <option value="USD">USD $</option>
+      <option value="EUR">EUR €</option>
+      <option value="GBP">GBP £</option>
+    </select>
+  </div>
   <div class="mobile-social">
     <a href="https://www.facebook.com/profile.php?id=100063587043419" target="_blank" rel="noopener" title="Facebook">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
@@ -500,14 +512,14 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
     <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/logo22.png" alt="SAP Design Store" onerror="this.style.display='none'">
     <span class="brand-name">SAP <span>DESIGN</span></span>
   </div>
-  <ul>
-    <li><a href="#" onclick="event.preventDefault(); scrollToSection('shop')">Shop</a></li>
-    <li><a href="#" onclick="event.preventDefault(); scrollToSection('lookbook')">Lookbook</a></li>
-    <li><a href="#" onclick="event.preventDefault(); scrollToSection('about')">About</a></li>
-    <li><a href="#" onclick="event.preventDefault(); scrollToSection('sizing')">Sizing</a></li>
-    <li><a href="#" onclick="event.preventDefault(); scrollToSection('shipping')">Shipping</a></li>
-    <li><a href="#" onclick="event.preventDefault(); scrollToSection('contact')">Contact</a></li>
-  </ul>
+<ul>
+  <li><a href="#" data-i18n="nav_shop" onclick="event.preventDefault(); scrollToSection('shop')">Shop</a></li>
+  <li><a href="#" data-i18n="nav_lookbook" onclick="event.preventDefault(); scrollToSection('lookbook')">Lookbook</a></li>
+  <li><a href="#" data-i18n="nav_about" onclick="event.preventDefault(); scrollToSection('about')">About</a></li>
+  <li><a href="#" data-i18n="nav_sizing" onclick="event.preventDefault(); scrollToSection('sizing')">Sizing</a></li>
+  <li><a href="#" data-i18n="nav_shipping" onclick="event.preventDefault(); scrollToSection('shipping')">Shipping</a></li>
+  <li><a href="#" data-i18n="nav_contact" onclick="event.preventDefault(); scrollToSection('contact')">Contact</a></li>
+</ul>
   <div class="nav-right">
     <div class="nav-social">
       <a href="https://www.facebook.com/profile.php?id=100063587043419" target="_blank" rel="noopener" title="Follow us on Facebook">
@@ -690,7 +702,7 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
       <div class="p-info">
         <p class="p-cat">Women · Dresses</p>
         <p class="p-name">Textured Embroidered Midi Dress</p>
-        <div class="p-price"><span class="price-now">R3500</span></div>
+        <div class="p-price"><span class="price-now" data-price="3500">R3,500</span></div>
       </div>
     </div>
 
@@ -711,7 +723,7 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
       <div class="p-info">
         <p class="p-cat">Signature Dresses · Outerwear</p>
         <p class="p-name">Satin Embroidered Evening Gown</p>
-        <div class="p-price"><span class="price-now">R2500</span><span class="price-was">R3000</span></div>
+        <div class="p-price"><span class="price-now" data-price="2500">R2,500</span><span class="price-was" data-price="3000">R3,000</span></div>
       </div>
     </div>
 
@@ -731,7 +743,7 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
       <div class="p-info">
         <p class="p-cat">Women · Bottoms</p>
         <p class="p-name">Sleek faux leather finish</p>
-        <div class="p-price"><span class="price-now">R1300</span></div>
+        <div class="p-price"><span class="price-now" data-price="1300">R1,300</span></div>
       </div>
     </div>
 
@@ -751,7 +763,7 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
       <div class="p-info">
         <p class="p-cat">Unisex · Accessories</p>
         <p class="p-name">Patterned Draped Maxi Dress</p>
-        <div class="p-price"><span class="price-now">R1800</span></div>
+        <div class="p-price"><span class="price-now" data-price="1800">R1,800</span></div>
       </div>
     </div>
 
@@ -1181,8 +1193,8 @@ function openModal(id) {
 
   document.getElementById('mCat').textContent   = p.cat;
   document.getElementById('mName').textContent  = p.name;
-  document.getElementById('mPrice').textContent = 'R' + p.price.toLocaleString('en-ZA');
-  document.getElementById('mWas').textContent   = p.oldPrice ? 'R' + p.oldPrice.toLocaleString('en-ZA') : '';
+  document.getElementById('mPrice').textContent = formatPrice(p.price);
+  document.getElementById('mWas').textContent   = p.oldPrice ? formatPrice(p.oldPrice) : '';
   document.getElementById('mDesc').textContent  = p.desc;
   document.getElementById('swName').textContent = p.colours[0].name;
   document.getElementById('szSelected').textContent = '';
@@ -1238,6 +1250,7 @@ const Cart = (() => {
   let items = [];
 
   function total() { return items.reduce((s,i) => s + i.price * i.qty, 0); }
+  function totalFormatted() { return formatPrice(total()); }
   function count() { return items.reduce((s,i) => s + i.qty, 0); }
 
   function add(p) {
@@ -1297,7 +1310,7 @@ const Cart = (() => {
           </div>
           <button class="rm-btn" onclick="Cart.remove('${it.key}')">Remove</button>
         </div>
-        <span class="ci-price">R${(it.price * it.qty).toLocaleString('en-ZA')}</span>
+        <span class="ci-price">${formatPrice(it.price * it.qty)}</span>
       </div>`).join('');
   }
 
@@ -1326,7 +1339,7 @@ function buildOrderSummary() {
   lines += `Name: ${name}\nPhone: ${phone}\nEmail: ${email}\nAddress: ${address}\n\n`;
   lines += `*Order Items*\n`;
   items.forEach(it => {
-    lines += `• ${it.name} (${it.colour}, Size ${it.size}) x${it.qty} — R${(it.price * it.qty).toLocaleString('en-ZA')}\n`;
+    lines += `• ${it.name} (${it.colour}, Size ${it.size}) x${it.qty} — ${formatPrice(it.price * it.qty)}\n`;
   });
   lines += `\n*Total: R${total.toLocaleString('en-ZA')}*\n`;
   lines += `\n_(Awaiting payment confirmation)_`;
@@ -1385,7 +1398,58 @@ function closeMobileNav() {
 function closeAll() {
   closeCart(); closeModal(); closeMobileNav();
 }
+/* ─── LANGUAGE & CURRENCY ─── */
+const TRANSLATIONS = {
+  en: {
+    nav_shop:'Shop', nav_lookbook:'Lookbook', nav_about:'About', nav_sizing:'Sizing', nav_shipping:'Shipping', nav_contact:'Contact',
+    hero1_title:'New Arrivals', hero1_sub:'Limited time. Unlimited style. Grab your favourites before they\'re gone — sale ends Sunday.',
+    shop_title:'Shop The Collection', about_title:'About SAP Design', sizing_title:'Sizing Guide', shipping_title:'Shipping & Returns', contact_title:'Contact Us',
+    cart_empty:'Your order is empty', btn_shop:'Shop Sale', btn_ask:'Ask Us', btn_story:'Our Story',
+    footer_copy:'© 2025 SAP Design Store · Cape Town 🇿🇦'
+  },
+  fr: {
+    nav_shop:'Boutique', nav_lookbook:'Lookbook', nav_about:'À Propos', nav_sizing:'Tailles', nav_shipping:'Livraison', nav_contact:'Contact',
+    hero1_title:'Nouvelles Arrivées', hero1_sub:'Durée limitée. Style illimité. Commandez avant la fin de la vente — dimanche dernier jour.',
+    shop_title:'Découvrez la Collection', about_title:'À Propos de SAP Design', sizing_title:'Guide des Tailles', shipping_title:'Livraison & Retours', contact_title:'Contactez-Nous',
+    cart_empty:'Votre commande est vide', btn_shop:'Voir les Soldes', btn_ask:'Nous Contacter', btn_story:'Notre Histoire',
+    footer_copy:'© 2025 SAP Design Store · Le Cap 🇿🇦'
+  }
+};
 
+const RATES = { ZAR: 1, USD: 0.054, EUR: 0.050, GBP: 0.043 };
+const SYMBOLS = { ZAR: 'R', USD: '$', EUR: '€', GBP: '£' };
+let currentLang = 'en';
+let currentCurrency = 'ZAR';
+
+function switchLang(lang) {
+  currentLang = lang;
+  const t = TRANSLATIONS[lang];
+  // Nav links
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+}
+
+function switchCurrency(currency) {
+  currentCurrency = currency;
+  const rate = RATES[currency];
+  const symbol = SYMBOLS[currency];
+  document.querySelectorAll('[data-price]').forEach(el => {
+    const base = parseFloat(el.getAttribute('data-price'));
+    const converted = (base * rate).toFixed(2);
+    el.textContent = symbol + converted.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  });
+  // Update cart if open
+  renderCart();
+}
+
+function formatPrice(zarAmount) {
+  const rate = RATES[currentCurrency];
+  const symbol = SYMBOLS[currentCurrency];
+  const converted = (zarAmount * rate).toFixed(2);
+  return symbol + parseFloat(converted).toLocaleString();
+}
 /* ─── FAQ ACCORDION ─── */
 function toggleFaq(btn) {
   const item = btn.parentElement;
