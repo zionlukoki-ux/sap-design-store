@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAP Design Store — Bold Fashion, Cape Town</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   RESET & VARIABLES
+══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #111010;
+  --white: #F7F4EF;
+  --accent: #E63B2E;
+  --accent2: #F5A623;
+  --muted: #888;
+  --card-bg: #1a1a1a;
+  --surface: #161616;
+  --border: rgba(255,255,255,0.08);
+}
+html { scroll-behavior: smooth; }
+body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+button { font-family: 'DM Sans', sans-serif; cursor: pointer; }
+
+/* ══════════════════════════════════════════
+   NAV
+══════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 3rem;
+  background: rgba(17,16,16,0.97); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border); transition: padding 0.3s;
+}
+.logo-zone { display: flex; align-items: center; gap: 12px; }
+.logo-zone img { height: 42px; width: auto; object-fit: contain; }
+.brand-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.75rem; letter-spacing: 0.12em; }
+.brand-name span { color: var(--accent); }
+nav ul { list-style: none; display: flex; gap: 2rem; }
+nav ul a { font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(247,244,239,0.6); transition: color 0.2s; }
+nav ul a:hover { color: var(--accent); }
+.nav-right { display: flex; gap: 1.2rem; align-items: center; }
+.nav-icon { width: 20px; height: 20px; stroke: rgba(247,244,239,0.65); fill: none; cursor: pointer; transition: stroke 0.2s; }
+.nav-icon:hover { stroke: var(--accent); }
+
+/* Social icons in nav */
+.nav-social { display: flex; gap: 10px; align-items: center; margin-right: 4px; }
+.nav-social a { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 2px; transition: border-color 0.2s, background 0.2s; }
+.nav-social a:hover { border-color: var(--accent); background: rgba(230,59,46,0.1); }
+.nav-social svg { width: 14px; height: 14px; fill: rgba(247,244,239,0.65); transition: fill 0.2s; }
+.nav-social a:hover svg { fill: var(--white); }
+
+.cart-wrap { position: relative; display: flex; cursor: pointer; }
+.cart-count { position: absolute; top: -6px; right: -6px; background: var(--accent); color: white; font-size: 9px; font-weight: 500; width: 16px; height: 16px; border-radius: 50%; display: none; align-items: center; justify-content: center; }
+
+/* hamburger */
+.hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 4px; }
+.hamburger span { display: block; width: 22px; height: 1.5px; background: var(--white); transition: all 0.3s; }
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* mobile drawer */
+.mobile-nav { position: fixed; inset: 0; z-index: 190; background: var(--black); transform: translateX(-100%); transition: transform 0.35s ease; display: flex; flex-direction: column; padding: 6rem 2.5rem 3rem; }
+.mobile-nav.open { transform: translateX(0); }
+.mobile-nav a { font-family: 'Bebas Neue', sans-serif; font-size: 2.6rem; letter-spacing: 0.08em; color: var(--white); border-bottom: 1px solid var(--border); padding: 0.8rem 0; display: block; transition: color 0.2s; }
+.mobile-nav a:hover { color: var(--accent); }
+.mobile-social { display: flex; gap: 12px; margin-top: 2rem; }
+.mobile-social a { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--border); transition: border-color 0.2s; }
+.mobile-social a:hover { border-color: var(--accent); }
+.mobile-social svg { width: 18px; height: 18px; fill: var(--white); }
+.mob-foot { margin-top: auto; font-size: 0.75rem; color: var(--muted); }
+
+/* ══════════════════════════════════════════
+   BACKDROP
+══════════════════════════════════════════ */
+.backdrop { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.75); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.backdrop.show { opacity: 1; pointer-events: all; }
+
+/* ══════════════════════════════════════════
+   CART / ORDER SIDEBAR
+══════════════════════════════════════════ */
+.cart-sidebar { position: fixed; top: 0; right: 0; bottom: 0; width: 420px; max-width: 100vw; z-index: 400; background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.35s ease; }
+.cart-sidebar.open { transform: translateX(0); }
+.cart-hd { display: flex; align-items: center; justify-content: space-between; padding: 1.6rem 1.8rem; border-bottom: 1px solid var(--border); }
+.cart-hd h2 { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 0.1em; }
+.x-btn { width: 34px; height: 34px; background: none; border: 1px solid var(--border); color: var(--white); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s; }
+.x-btn:hover { border-color: var(--accent); }
+.x-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; }
+
+.cart-body { flex: 1; overflow-y: auto; padding: 1.2rem 1.8rem; }
+.cart-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 200px; gap: 1rem; color: var(--muted); }
+.cart-empty svg { width: 44px; height: 44px; stroke: var(--muted); fill: none; opacity: 0.3; }
+.cart-empty p { font-size: 0.85rem; }
+
+.cart-item { display: grid; grid-template-columns: 70px 1fr auto; gap: 0.9rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border); align-items: start; }
+.ci-img { width: 70px; height: 88px; overflow: hidden; background: #222; }
+.ci-img img { width: 100%; height: 100%; object-fit: cover; }
+.ci-name { font-size: 0.85rem; font-weight: 400; margin-bottom: 2px; line-height: 1.4; }
+.ci-meta { font-size: 0.7rem; color: var(--muted); margin-bottom: 8px; }
+.qty-row { display: flex; align-items: center; border: 1px solid var(--border); width: fit-content; }
+.qty-btn { width: 26px; height: 26px; background: none; border: none; color: var(--white); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.qty-btn:hover { background: rgba(255,255,255,0.06); }
+.qty-n { font-size: 0.78rem; padding: 0 8px; min-width: 26px; text-align: center; }
+.rm-btn { background: none; border: none; color: var(--muted); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; margin-top: 5px; padding: 0; display: block; transition: color 0.2s; }
+.rm-btn:hover { color: var(--accent); }
+.ci-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 0.06em; white-space: nowrap; }
+
+/* customer details inside cart */
+.cart-details { padding: 1.2rem 1.8rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.cart-details h3 { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+.cd-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--white); padding: 0.7rem 0.9rem; font-size: 0.83rem; font-family: 'DM Sans', sans-serif; outline: none; margin-bottom: 0.7rem; transition: border-color 0.2s; }
+.cd-input:focus { border-color: var(--accent); }
+.cd-input::placeholder { color: rgba(247,244,239,0.25); }
+
+.cart-ft { padding: 1.3rem 1.8rem; }
+.subtotal-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+.subtotal-row span { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.subtotal-row strong { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 0.06em; }
+.full-btn { display: block; width: 100%; padding: 0.95rem; text-align: center; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-bottom: 0.65rem; transition: background 0.2s; }
+.btn-wa { background: #25D366; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-wa:hover { background: #1db954; }
+.btn-wa svg { width: 17px; height: 17px; fill: white; flex-shrink: 0; }
+.btn-mail { background: var(--accent); color: white; }
+.btn-mail:hover { background: #c5271b; }
+.btn-continue { background: rgba(255,255,255,0.05); color: var(--white); border: 1px solid var(--border); }
+.btn-continue:hover { background: rgba(255,255,255,0.09); }
+.cart-note { font-size: 0.72rem; color: var(--muted); text-align: center; margin-top: 0.8rem; line-height: 1.6; }
+
+/* ══════════════════════════════════════════
+   PRODUCT MODAL
+══════════════════════════════════════════ */
+.modal-wrap { position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center; padding: 1.5rem; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.modal-wrap.open { opacity: 1; pointer-events: all; }
+.modal-box { background: var(--surface); width: 100%; max-width: 900px; max-height: 92vh; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); transform: translateY(18px); transition: transform 0.35s ease; position: relative; }
+.modal-wrap.open .modal-box { transform: translateY(0); }
+.modal-gal { background: #1f1f1f; position: relative; min-height: 480px; overflow: hidden; }
+.modal-gal img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.modal-close { position: absolute; top: 0.9rem; right: 0.9rem; z-index: 10; width: 34px; height: 34px; background: rgba(0,0,0,0.65); border: 1px solid var(--border); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.modal-close svg { width: 13px; height: 13px; stroke: currentColor; fill: none; }
+.modal-info { padding: 2.2rem 1.8rem; display: flex; flex-direction: column; }
+.m-cat { font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+.m-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; letter-spacing: 0.06em; line-height: 1.05; margin-bottom: 0.7rem; }
+.m-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 0.4rem; }
+.m-price .m-was { font-size: 1rem; color: var(--muted); text-decoration: line-through; margin-left: 8px; }
+.m-desc { font-size: 0.84rem; color: rgba(247,244,239,0.5); line-height: 1.9; margin-bottom: 1.5rem; flex: 1; }
+.sw-label, .sz-label { font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+.sw-label span, .sz-label span { color: var(--white); }
+.swatches { display: flex; gap: 7px; margin-bottom: 1.2rem; flex-wrap: wrap; }
+.swatch { width: 25px; height: 25px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: border-color 0.2s; }
+.swatch.active { border-color: var(--white); }
+.sizes { display: flex; gap: 7px; margin-bottom: 1.6rem; flex-wrap: wrap; }
+.sz-btn { min-width: 42px; height: 42px; padding: 0 9px; background: none; border: 1px solid var(--border); color: rgba(247,244,239,0.45); font-size: 0.76rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+.sz-btn:hover { border-color: var(--white); color: var(--white); }
+.sz-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+.sz-btn.out { opacity: 0.2; cursor: not-allowed; text-decoration: line-through; }
+.m-actions { display: flex; gap: 9px; }
+.m-add { flex: 1; padding: 0.95rem; background: var(--accent); color: white; border: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+.m-add:hover { background: #c5271b; }
+.m-wish { width: 50px; height: 50px; background: none; border: 1px solid var(--border); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s; }
+.m-wish:hover { border-color: var(--accent); }
+.m-wish svg { width: 17px; height: 17px; stroke: currentColor; fill: none; }
+.m-wish.on svg { fill: var(--accent); stroke: var(--accent); }
+
+/* ══════════════════════════════════════════
+   SHARED SECTION STYLES
+══════════════════════════════════════════ */
+.section { padding: 6rem 3rem; }
+.section-dark { background: var(--surface); }
+.sec-eye { font-size: 0.68rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.45rem; }
+.sec-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1; letter-spacing: 0.06em; }
+.sec-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; }
+.view-all { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(247,244,239,0.4); border-bottom: 1px solid rgba(247,244,239,0.12); padding-bottom: 2px; transition: color 0.2s; white-space: nowrap; margin-bottom: 3px; }
+.view-all:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ══════════════════════════════════════════
+   HERO SLIDESHOW
+══════════════════════════════════════════ */
+.hero { position: relative; height: 100vh; overflow: hidden; }
+.slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.9s ease; display: flex; align-items: center; }
+.slide.active { opacity: 1; }
+.slide-bg { position: absolute; inset: 0; background-size: cover; background-position: center top; transform: scale(1.04); transition: transform 7s ease; }
+.slide.active .slide-bg { transform: scale(1); }
+.slide-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(17,16,16,0.85) 0%, rgba(17,16,16,0.45) 55%, transparent 100%); }
+.slide-content { position: relative; z-index: 2; padding: 0 3rem; max-width: 580px; }
+.slide-tag { font-size: 0.7rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.2rem; display: flex; align-items: center; gap: 12px; }
+.slide-tag::before { content: ''; display: block; width: 32px; height: 1px; background: var(--accent); }
+.slide-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.8rem, 8vw, 7rem); line-height: 0.88; letter-spacing: 0.04em; margin-bottom: 1.4rem; }
+.slide-title em { color: var(--accent); font-style: normal; }
+.slide-sub { font-size: 0.95rem; color: rgba(247,244,239,0.6); max-width: 400px; margin-bottom: 2.2rem; line-height: 1.78; }
+.btn-red { display: inline-block; background: var(--accent); color: white; padding: 0.85rem 2.2rem; font-size: 0.76rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; margin-right: 0.7rem; }
+.btn-red:hover { background: #c5271b; transform: translateY(-1px); }
+.btn-outline { display: inline-block; background: transparent; color: var(--white); padding: 0.85rem 2.2rem; font-size: 0.76rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 500; border: 1px solid rgba(247,244,239,0.32); cursor: pointer; transition: border-color 0.2s; }
+.btn-outline:hover { border-color: var(--white); }
+.slide-controls { position: absolute; bottom: 2.2rem; left: 3rem; z-index: 10; display: flex; gap: 9px; }
+.dot { width: 22px; height: 2px; background: rgba(247,244,239,0.28); border: none; cursor: pointer; transition: background 0.3s, width 0.3s; }
+.dot.active { background: var(--accent); width: 48px; }
+.slide-arrows { position: absolute; bottom: 2.2rem; right: 3rem; z-index: 10; display: flex; gap: 9px; }
+.arr { width: 46px; height: 46px; border: 1px solid rgba(247,244,239,0.18); background: transparent; color: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s, background 0.2s; }
+.arr:hover { border-color: var(--accent); background: rgba(230,59,46,0.1); }
+.arr svg { width: 17px; height: 17px; stroke: currentColor; fill: none; }
+
+/* ══════════════════════════════════════════
+   MARQUEE
+══════════════════════════════════════════ */
+.marquee-bar { background: var(--accent); padding: 0.7rem 0; overflow: hidden; white-space: nowrap; }
+.marquee-inner { display: inline-block; animation: marqueeScroll 24s linear infinite; font-family: 'Bebas Neue', sans-serif; font-size: 0.92rem; letter-spacing: 0.22em; color: white; }
+@keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* ══════════════════════════════════════════
+   PRODUCT CARDS
+══════════════════════════════════════════ */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 2px; }
+.p-card { background: var(--card-bg); position: relative; overflow: hidden; cursor: pointer; }
+.p-card:hover .p-img img { transform: scale(1.06); }
+.p-card:hover .card-actions { opacity: 1; transform: translateY(0); }
+.p-img { position: relative; aspect-ratio: 3/4; overflow: hidden; background: #222; }
+.p-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.55s ease; }
+.p-badge { position: absolute; top: 0.9rem; left: 0.9rem; font-size: 0.61rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; padding: 3px 10px; }
+.badge-new { background: var(--accent); color: white; }
+.badge-sale { background: var(--accent2); color: #111; }
+.card-actions { position: absolute; bottom: 0; left: 0; right: 0; padding: 0.9rem; display: flex; gap: 7px; opacity: 0; transform: translateY(8px); transition: opacity 0.3s, transform 0.3s; }
+.ca-main { flex: 1; padding: 0.6rem; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; background: var(--accent); color: white; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.ca-icon { width: 38px; background: rgba(0,0,0,0.55); color: white; flex: none; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.18); cursor: pointer; }
+.ca-icon svg { width: 15px; height: 15px; stroke: currentColor; fill: none; }
+.card-swatches { display: flex; gap: 5px; padding: 0.55rem 1.1rem 0; }
+.csw { width: 15px; height: 15px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.14); cursor: pointer; transition: border-color 0.2s; }
+.csw.active { border-color: var(--white); }
+.p-info { padding: 1rem 1.1rem 1.2rem; border-top: 1px solid rgba(255,255,255,0.05); }
+.p-cat { font-size: 0.63rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+.p-name { font-size: 0.9rem; font-weight: 400; margin-bottom: 7px; }
+.p-price { display: flex; align-items: center; gap: 9px; }
+.price-now { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 0.06em; }
+.price-was { font-size: 0.8rem; color: var(--muted); text-decoration: line-through; }
+
+/* ══════════════════════════════════════════
+   FEATURED BANNER
+══════════════════════════════════════════ */
+.feat-banner { margin: 0 3rem; display: grid; grid-template-columns: 1fr 1fr; min-height: 360px; border: 1px solid var(--border); overflow: hidden; }
+.feat-text { padding: 3.5rem; display: flex; flex-direction: column; justify-content: center; background: var(--surface); }
+.feat-text h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.8rem, 3.5vw, 3rem); letter-spacing: 0.06em; margin-bottom: 1rem; }
+.feat-text p { font-size: 0.86rem; color: rgba(247,244,239,0.5); max-width: 320px; margin-bottom: 1.8rem; line-height: 1.85; }
+.feat-img { overflow: hidden; }
+.feat-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.feat-banner:hover .feat-img img { transform: scale(1.04); }
+
+/* ══════════════════════════════════════════
+   CATEGORIES
+══════════════════════════════════════════ */
+.cats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; }
+.cat-card { position: relative; aspect-ratio: 1; overflow: hidden; cursor: pointer; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+.cat-card img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; transition: transform 0.55s ease; }
+.cat-card:hover img { transform: scale(1.07); }
+.cat-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%); }
+.cat-label { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; padding: 1.1rem; }
+.cat-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.08em; display: block; }
+.cat-count { font-size: 0.65rem; color: rgba(247,244,239,0.42); letter-spacing: 0.1em; text-transform: uppercase; }
+.cat-placeholder { background: linear-gradient(135deg, #1a1a1a, #262626); }
+.cat-placeholder svg { width: 28px; height: 28px; stroke: rgba(255,255,255,0.1); fill: none; position: relative; z-index: 1; }
+
+/* ══════════════════════════════════════════
+   ABOUT SECTION
+══════════════════════════════════════════ */
+.about-split { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.about-img { overflow: hidden; min-height: 420px; }
+.about-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.about-split:hover .about-img img { transform: scale(1.03); }
+.about-text { padding: 5rem 3.5rem; background: var(--surface); display: flex; flex-direction: column; justify-content: center; }
+.about-text h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem,4vw,3rem); letter-spacing: 0.06em; margin-bottom: 1.4rem; }
+.about-text h2 span { color: var(--accent); }
+.about-text p { font-size: 0.86rem; color: rgba(247,244,239,0.52); line-height: 1.92; margin-bottom: 1rem; max-width: 420px; }
+
+/* values grid */
+.values-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 4rem; }
+.val-card { padding: 2.2rem; border-left: 1px solid var(--border); }
+.val-num { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: var(--accent); opacity: 0.25; line-height: 1; margin-bottom: 0.8rem; }
+.val-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.35rem; letter-spacing: 0.08em; margin-bottom: 0.7rem; }
+.val-card p { font-size: 0.84rem; color: rgba(247,244,239,0.48); line-height: 1.82; }
+
+/* stats bar */
+.stats-bar { background: var(--accent); padding: 3.5rem 3rem; }
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); text-align: center; }
+.stat-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.2rem,5vw,4rem); letter-spacing: 0.04em; display: block; }
+.stat-lbl { font-size: 0.76rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.82; }
+
+/* ══════════════════════════════════════════
+   LOOKBOOK / GALLERY SECTION
+══════════════════════════════════════════ */
+.lookbook-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto; gap: 2px; }
+.lk-card { overflow: hidden; position: relative; cursor: pointer; }
+.lk-card.tall { grid-row: span 2; }
+.lk-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.55s ease; display: block; }
+.lk-card:hover img { transform: scale(1.05); }
+.lk-card .lk-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background 0.3s; display: flex; align-items: center; justify-content: center; }
+.lk-card:hover .lk-overlay { background: rgba(0,0,0,0.35); }
+.lk-card .lk-tag { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.12em; color: white; opacity: 0; transition: opacity 0.3s; }
+.lk-card:hover .lk-tag { opacity: 1; }
+
+/* ══════════════════════════════════════════
+   SIZING GUIDE
+══════════════════════════════════════════ */
+.size-guide { padding: 6rem 3rem; background: var(--surface); }
+.size-table-wrap { overflow-x: auto; margin-top: 2.5rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+thead th { font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); padding: 0.8rem 1.2rem; text-align: left; border-bottom: 1px solid var(--border); }
+tbody td { padding: 0.85rem 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(247,244,239,0.65); }
+tbody tr:hover td { background: rgba(255,255,255,0.025); color: var(--white); }
+.size-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2.5rem; }
+.size-note-card { padding: 1.5rem; border: 1px solid var(--border); }
+.size-note-card h4 { font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.6rem; color: var(--accent); }
+.size-note-card p { font-size: 0.82rem; color: rgba(247,244,239,0.48); line-height: 1.8; }
+
+/* ══════════════════════════════════════════
+   SHIPPING & RETURNS
+══════════════════════════════════════════ */
+.shipping-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 3rem; }
+.ship-card { padding: 2.5rem 2rem; background: var(--surface); border-left: 1px solid var(--border); }
+.ship-icon { width: 48px; height: 48px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; margin-bottom: 1.4rem; }
+.ship-icon svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; }
+.ship-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.08em; margin-bottom: 0.7rem; }
+.ship-card p { font-size: 0.83rem; color: rgba(247,244,239,0.48); line-height: 1.85; }
+
+/* FAQ */
+.faq-list { margin-top: 2.5rem; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-q { width: 100%; background: none; border: none; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 400; text-align: left; padding: 1.2rem 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; letter-spacing: 0.02em; transition: color 0.2s; }
+.faq-q:hover { color: var(--accent); }
+.faq-q svg { width: 16px; height: 16px; stroke: currentColor; fill: none; flex-shrink: 0; transition: transform 0.3s; }
+.faq-item.open .faq-q svg { transform: rotate(45deg); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.3s; }
+.faq-a p { font-size: 0.83rem; color: rgba(247,244,239,0.48); line-height: 1.88; padding-bottom: 1.2rem; }
+.faq-item.open .faq-a { max-height: 200px; }
+
+/* ══════════════════════════════════════════
+   NEWSLETTER
+══════════════════════════════════════════ */
+.news-wrap { max-width: 540px; margin: 0 auto; text-align: center; }
+.news-wrap p { font-size: 0.88rem; color: rgba(247,244,239,0.48); margin: 0.9rem 0 2rem; }
+.email-row { display: flex; max-width: 400px; margin: 0 auto; }
+.email-row input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.11); border-right: none; color: var(--white); padding: 0.85rem 1rem; font-size: 0.83rem; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s; }
+.email-row input::placeholder { color: rgba(247,244,239,0.24); }
+.email-row input:focus { border-color: var(--accent); }
+.email-row button { background: var(--accent); color: white; border: none; padding: 0.85rem 1.3rem; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
+.email-row button:hover { background: #c5271b; }
+
+/* ══════════════════════════════════════════
+   CONTACT
+══════════════════════════════════════════ */
+.contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 2px; }
+.contact-info { padding: 5rem 3rem; background: var(--surface); }
+.contact-info h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.8rem,3.5vw,2.8rem); letter-spacing: 0.06em; margin-bottom: 2.2rem; }
+.c-item { display: flex; gap: 1rem; margin-bottom: 1.7rem; align-items: flex-start; }
+.c-icon { width: 42px; height: 42px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.c-icon svg { width: 17px; height: 17px; stroke: var(--accent); fill: none; }
+.c-lbl { font-size: 0.64rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+.c-val { font-size: 0.88rem; line-height: 1.6; }
+.c-val a { transition: color 0.2s; }
+.c-val a:hover { color: var(--accent); }
+.social-links { display: flex; gap: 10px; margin-top: 2rem; flex-wrap: wrap; }
+.soc-btn { display: flex; align-items: center; gap: 9px; padding: 0.65rem 1.2rem; border: 1px solid var(--border); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; transition: border-color 0.2s, background 0.2s; }
+.soc-btn:hover { border-color: var(--accent); background: rgba(230,59,46,0.08); }
+.soc-btn svg { width: 16px; height: 16px; fill: var(--white); flex-shrink: 0; }
+.soc-btn span { color: var(--white); }
+
+.hours-box { margin-top: 2.2rem; padding: 1.4rem; border: 1px solid var(--border); }
+.hours-box h4 { font-size: 0.64rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.9rem; }
+.h-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.h-row:last-child { border-bottom: none; }
+.h-row span:last-child { color: var(--accent); }
+
+.contact-form { padding: 5rem 3rem; }
+.contact-form h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.8rem,3.5vw,2.8rem); letter-spacing: 0.06em; margin-bottom: 2.2rem; }
+.f-group { margin-bottom: 1.2rem; }
+.f-label { display: block; font-size: 0.64rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.42rem; }
+.f-input, .f-select, .f-textarea { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--white); padding: 0.82rem 1rem; font-size: 0.86rem; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s; appearance: none; }
+.f-input::placeholder, .f-textarea::placeholder { color: rgba(247,244,239,0.22); }
+.f-input:focus, .f-select:focus, .f-textarea:focus { border-color: var(--accent); }
+.f-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; cursor: pointer; }
+.f-select option { background: #1a1a1a; }
+.f-textarea { resize: vertical; min-height: 110px; line-height: 1.7; }
+.f-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.success-bar { display: none; background: rgba(37,211,102,0.1); border: 1px solid rgba(37,211,102,0.3); padding: 0.9rem 1.2rem; margin-top: 1rem; font-size: 0.82rem; color: #25D366; }
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
+.foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 2.5rem; margin-bottom: 2.5rem; }
+.foot-brand img { height: 38px; width: auto; margin-bottom: 1rem; }
+.foot-brand-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.12em; margin-bottom: 0.9rem; }
+.foot-brand-name span { color: var(--accent); }
+.foot-brand p { font-size: 0.8rem; color: rgba(247,244,239,0.38); line-height: 1.82; max-width: 210px; margin-bottom: 1.2rem; }
+.foot-social { display: flex; gap: 9px; }
+.foot-soc { width: 36px; height: 36px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; transition: border-color 0.2s, background 0.2s; }
+.foot-soc:hover { border-color: var(--accent); background: rgba(230,59,46,0.08); }
+.foot-soc svg { width: 15px; height: 15px; fill: rgba(247,244,239,0.6); transition: fill 0.2s; }
+.foot-soc:hover svg { fill: var(--white); }
+.foot-col h4 { font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(247,244,239,0.32); margin-bottom: 1rem; }
+.foot-col ul { list-style: none; }
+.foot-col li { margin-bottom: 0.6rem; }
+.foot-col a { color: rgba(247,244,239,0.52); font-size: 0.82rem; transition: color 0.2s; }
+.foot-col a:hover { color: var(--accent); }
+.foot-bottom { border-top: 1px solid var(--border); padding-top: 1.2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+.foot-bottom p { font-size: 0.72rem; color: rgba(247,244,239,0.26); }
+.foot-payments { display: flex; gap: 8px; align-items: center; }
+.pay-badge { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.12); padding: 3px 8px; color: rgba(247,244,239,0.35); border-radius: 2px; }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .feat-banner { grid-template-columns: 1fr; margin: 0 1.5rem; }
+  .feat-img { display: none; }
+  .about-split { grid-template-columns: 1fr; }
+  .about-img { min-height: 280px; display: block; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .shipping-grid { grid-template-columns: 1fr; }
+  .values-grid { grid-template-columns: 1fr 1fr; }
+  .size-notes { grid-template-columns: 1fr; }
+  .lookbook-grid { grid-template-columns: 1fr 1fr; }
+  .lk-card.tall { grid-row: span 1; }
+}
+@media (max-width: 900px) {
+  nav { padding: 0.9rem 1.5rem; }
+  nav ul { display: none; }
+  .nav-social { display: none; }
+  .hamburger { display: flex; }
+  .section { padding: 4rem 1.5rem; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); gap: 2rem; }
+  .cats-grid { grid-template-columns: repeat(2,1fr); }
+  .modal-box { grid-template-columns: 1fr; }
+  .modal-gal { min-height: 260px; }
+  .foot-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .slide-content { padding: 0 1.5rem; }
+  .slide-controls { left: 1.5rem; }
+  .slide-arrows { right: 1.5rem; }
+  .about-text { padding: 3rem 1.5rem; }
+  .contact-info, .contact-form { padding: 3rem 1.5rem; }
+  .size-guide { padding: 4rem 1.5rem; }
+  .values-grid { grid-template-columns: 1fr; }
+  .stats-bar { padding: 3rem 1.5rem; }
+  .f-row2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  nav { padding: 0.8rem 1rem; }
+  .brand-name { font-size: 1.35rem; }
+  .logo-zone img { height: 34px; }
+  .cats-grid { grid-template-columns: 1fr 1fr; }
+  .foot-grid { grid-template-columns: 1fr; }
+  .foot-bottom { flex-direction: column; text-align: center; }
+  .lookbook-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════ BACKDROP ════ -->
+<div class="backdrop" id="backdrop" onclick="closeAll()"></div>
+
+<!-- ════ MOBILE NAV ════ -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('home')">Home</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('shop')">Shop</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('lookbook')">Lookbook</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('about')">About</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('sizing')">Sizing</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('shipping')">Shipping</a>
+  <a href="#" onclick="event.preventDefault(); closeMobileNav(); scrollToSection('contact')">Contact</a>
+  <div class="mobile-social">
+    <a href="https://www.facebook.com/profile.php?id=100063587043419" target="_blank" rel="noopener" title="Facebook">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+    </a>
+    <a href="https://www.instagram.com/sap_design_co/" target="_blank" rel="noopener" title="Instagram">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+  </div>
+  <p class="mob-foot">© 2025 SAP Design Store · Cape Town 🇿🇦</p>
+</div>
+
+<!-- ════ NAV ════ -->
+<nav id="home">
+  <div class="logo-zone">
+    <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/logo22.png" alt="SAP Design Store" onerror="this.style.display='none'">
+    <span class="brand-name">SAP <span>DESIGN</span></span>
+  </div>
+  <ul>
+    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('home'), 350)">Home</a>
+    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shop'), 350)">Shop</a>
+    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('lookbook'), 350)">Lookbook</a>
+    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('about'), 350)">About</a>
+    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('sizing'), 350)">Sizing</a>
+    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shipping'), 350)">Shipping</a>
+    <a href="#" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('contact'), 350)">Contact</a>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-social">
+      <a href="https://www.facebook.com/profile.php?id=100063587043419" target="_blank" rel="noopener" title="Follow us on Facebook">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/sap_design_co/" target="_blank" rel="noopener" title="Follow us on Instagram">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+    </div>
+    <div class="cart-wrap" onclick="openCart()" title="View your order">
+      <svg class="nav-icon" viewBox="0 0 24 24" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ════ CART / ORDER SIDEBAR ════ -->
+<aside class="cart-sidebar" id="cartSidebar">
+  <div class="cart-hd">
+    <h2>Your Order</h2>
+    <button class="x-btn" onclick="closeCart()">
+      <svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty" id="cartEmpty">
+      <svg viewBox="0 0 24 24" stroke-width="1"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <p>Your order is empty</p>
+    </div>
+    <div id="cartItems"></div>
+  </div>
+
+  <div class="cart-details" id="cartDetails" style="display:none;">
+    <h3>Your Details</h3>
+    <input class="cd-input" id="custName" type="text" placeholder="Full Name *" required>
+    <input class="cd-input" id="custPhone" type="tel" placeholder="Phone / WhatsApp Number *" required>
+    <input class="cd-input" id="custEmail" type="email" placeholder="Email Address *" required>
+    <input class="cd-input" id="custAddress" type="text" placeholder="Delivery Address *" required>
+  </div>
+
+  <div class="cart-ft" id="cartFt" style="display:none;">
+    <div class="subtotal-row">
+      <span>Order Total</span>
+      <strong id="cartTotal">R0</strong>
+    </div>
+    <button class="full-btn btn-wa" onclick="sendWhatsApp()">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+      Order via WhatsApp
+    </button>
+    <button class="full-btn btn-mail" onclick="sendEmail()">Order via Email</button>
+    <button class="full-btn btn-continue" onclick="closeCart()">Continue Shopping</button>
+    <p class="cart-note">We'll confirm your order & send payment details within 2 hours during business hours.</p>
+  </div>
+</aside>
+
+<!-- ════ PRODUCT MODAL ════ -->
+<div class="modal-wrap" id="modalWrap">
+  <div class="modal-box">
+    <div class="modal-gal" id="modalGal">
+      <img id="modalImg" src="" alt="">
+      <button class="modal-close" onclick="closeModal()">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-info">
+      <p class="m-cat" id="mCat"></p>
+      <h2 class="m-name" id="mName"></h2>
+      <p class="m-price"><span id="mPrice"></span><span class="m-was" id="mWas"></span></p>
+      <p class="m-desc" id="mDesc"></p>
+      <p class="sw-label">Colour: <span id="swName"></span></p>
+      <div class="swatches" id="modalSwatches"></div>
+      <p class="sz-label">Size: <span id="szSelected">&nbsp;</span></p>
+      <div class="sizes" id="modalSizes"></div>
+      <div class="m-actions">
+        <button class="m-add" onclick="modalAddToCart()">Add to Order</button>
+        <button class="m-wish" id="mWish" onclick="this.classList.toggle('on')" title="Save to wishlist">
+          <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     HERO SLIDESHOW
+══════════════════════════════════════════ -->
+<div class="hero">
+  <div class="slide active">
+    <div class="slide-bg" style="background-image:url('https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/hero.png');"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-content">
+      <p class="slide-tag">New Collection 2025</p>
+      <h1 class="slide-title">DRESS<br>TO <em>RULE</em></h1>
+      <p class="slide-sub">Unapologetic silhouettes for the boldly dressed. Where edge meets elegance — made right here in Cape Town.</p>
+      <button class="btn-red" onclick="scrollToSection('shop')">Shop Now</button>
+      <a href="#" onclick="event.preventDefault(); scrollToSection('about')" class="btn-outline">Our Story</a>
+    </div>
+  </div>
+  <div class="slide">
+    <div class="slide-bg" style="background-image:url('https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product.png'); background-position: center top;"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-content">
+      <p class="slide-tag">Featured Drop</p>
+      <h1 class="slide-title">BOLD<br><em>MOVES</em></h1>
+      <p class="slide-sub">Refined cuts. Raw attitude. The new wardrobe is here — built for those who lead, not follow.</p>
+      <button class="btn-red" onclick="openModal('p1')">Explore Now</button>
+      <a href="#" onclick="event.preventDefault(); scrollToSection('shop')" class="btn-outline">View All</a>
+    </div>
+  </div>
+  <div class="slide">
+    <div class="slide-bg" style="background-image:url('https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product1.png'); background-position: center top;"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-content">
+      <p class="slide-tag">End of Season Sale</p>
+      <h1 class="slide-title">UP TO<br><em>50% OFF</em></h1>
+      <p class="slide-sub">Limited time. Unlimited style. Grab your favourites before they're gone — sale ends Sunday.</p>
+      <button class="btn-red" onclick="scrollToSection('shop')">Shop Sale</button>
+      <a href="#" onclick="event.preventDefault(); scrollToSection('contact')" class="btn-outline">Ask Us</a>
+    </div>
+  </div>
+  <div class="slide-controls">
+    <button class="dot active" onclick="goTo(0)"></button>
+    <button class="dot" onclick="goTo(1)"></button>
+    <button class="dot" onclick="goTo(2)"></button>
+  </div>
+  <div class="slide-arrows">
+    <button class="arr" onclick="prevSlide()"><svg viewBox="0 0 24 24" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <button class="arr" onclick="nextSlide()"><svg viewBox="0 0 24 24" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-bar">
+  <span class="marquee-inner">FREE SHIPPING OVER R800 &nbsp;✦&nbsp; NEW ARRIVALS EVERY WEEK &nbsp;✦&nbsp; EASY 30-DAY RETURNS &nbsp;✦&nbsp; SECURE PAYMENT &nbsp;✦&nbsp; PROUDLY SOUTH AFRICAN &nbsp;✦&nbsp; FREE SHIPPING OVER R800 &nbsp;✦&nbsp; NEW ARRIVALS EVERY WEEK &nbsp;✦&nbsp; EASY 30-DAY RETURNS &nbsp;✦&nbsp; SECURE PAYMENT &nbsp;✦&nbsp; PROUDLY SOUTH AFRICAN &nbsp;✦&nbsp;</span>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SHOP — NEW IN
+══════════════════════════════════════════ -->
+<section class="section" id="shop">
+  <div class="sec-head">
+    <div>
+      <p class="sec-eye">Just Dropped</p>
+      <h2 class="sec-title">NEW IN</h2>
+    </div>
+    <a href="#shop" class="view-all">View All →</a>
+  </div>
+  <div class="product-grid">
+
+    <div class="p-card" onclick="openModal('p1')">
+      <div class="p-img">
+        <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product.png" alt="Textured Embroidered Midi Dress">
+        <span class="p-badge badge-new">New</span>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="ca-main" onclick="openModal('p1')">Quick View</button>
+          <button class="ca-icon" onclick="wishToggle(this)"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+      </div>
+      <div class="card-swatches" onclick="event.stopPropagation()">
+        <div class="csw active" style="background:#E8E0D4;" title="Ivory"></div>
+        <div class="csw" style="background:#1a1a1a;" title="Black"></div>
+        <div class="csw" style="background:#C9908A;" title="Dusty Rose"></div>
+      </div>
+      <div class="p-info">
+        <p class="p-cat">Women · Dresses</p>
+        <p class="p-name">Textured Embroidered Midi Dress</p>
+        <div class="p-price"><span class="price-now">R3500</span></div>
+      </div>
+    </div>
+
+    <div class="p-card" onclick="openModal('p2')">
+      <div class="p-img">
+        <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product1.png" alt="Satin Embroidered Evening Gown">
+        <span class="p-badge badge-sale">Sale</span>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="ca-main" onclick="openModal('p2')">Quick View</button>
+          <button class="ca-icon" onclick="wishToggle(this)"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+      </div>
+      <div class="card-swatches" onclick="event.stopPropagation()">
+        <div class="csw active" style="background:#2B4080;" title="Indigo"></div>
+        <div class="csw" style="background:#7B90B2;" title="Light Wash"></div>
+        <div class="csw" style="background:#1a1a1a;" title="Black"></div>
+      </div>
+      <div class="p-info">
+        <p class="p-cat">Signature Dresses · Outerwear</p>
+        <p class="p-name">Satin Embroidered Evening Gown</p>
+        <div class="p-price"><span class="price-now">R2500</span><span class="price-was">R3000</span></div>
+      </div>
+    </div>
+
+    <div class="p-card" onclick="openModal('p3')">
+      <div class="p-img">
+        <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product2.png" alt="Sleek faux leather finish">
+        <span class="p-badge badge-new">New</span>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="ca-main" onclick="openModal('p3')">Quick View</button>
+          <button class="ca-icon" onclick="wishToggle(this)"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+      </div>
+      <div class="card-swatches" onclick="event.stopPropagation()">
+        <div class="csw active" style="background:#1a1a1a;" title="Black"></div>
+        <div class="csw" style="background:#5C3A1E;" title="Chocolate"></div>
+      </div>
+      <div class="p-info">
+        <p class="p-cat">Women · Bottoms</p>
+        <p class="p-name">Sleek faux leather finish</p>
+        <div class="p-price"><span class="price-now">R1300</span></div>
+      </div>
+    </div>
+
+    <div class="p-card" onclick="openModal('p4')">
+      <div class="p-img">
+        <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product4.png" alt="Patterned Draped Maxi Dress">
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="ca-main" onclick="openModal('p4')">Quick View</button>
+          <button class="ca-icon" onclick="wishToggle(this)"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+      </div>
+      <div class="card-swatches" onclick="event.stopPropagation()">
+        <div class="csw active" style="background:#1a1a1a;" title="Black"></div>
+        <div class="csw" style="background:#F7F4EF;border:1px solid #555;" title="White"></div>
+        <div class="csw" style="background:#E63B2E;" title="Red"></div>
+      </div>
+      <div class="p-info">
+        <p class="p-cat">Unisex · Accessories</p>
+        <p class="p-name">Patterned Draped Maxi Dress</p>
+        <div class="p-price"><span class="price-now">R1800</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURED BANNER -->
+<div class="feat-banner">
+  <div class="feat-text">
+    <p class="sec-eye">Featured Collection</p>
+    <h2>THE MIDNIGHT<br>EDIT</h2>
+    <p>Our darkest, most luxurious capsule yet. Monochrome mastery for every occasion — from the boardroom to the bar, Cape Town nights included.</p>
+    <button class="btn-red" onclick="openModal('p3')">Shop the Edit</button>
+  </div>
+  <div class="feat-img">
+    <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/hero.png" alt="Midnight Edit">
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="section">
+  <div class="sec-head">
+    <div>
+      <p class="sec-eye">Browse By</p>
+      <h2 class="sec-title">CATEGORIES</h2>
+    </div>
+  </div>
+  <div class="cats-grid">
+    <div class="cat-card" onclick="scrollToSection('shop')">
+      <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product.png" alt="Women">
+      <div class="cat-label"><span class="cat-name">WOMEN</span><span class="cat-count">24 items</span></div>
+    </div>
+    <div class="cat-card" onclick="scrollToSection('shop')">
+      <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product1.png" alt="Signature Dresses">
+      <div class="cat-label"><span class="cat-name">Signature Dresses</span><span class="cat-count">18 items</span></div>
+    </div>
+    <div class="cat-card" onclick="scrollToSection('shop')">
+      <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product2.png" alt="Everyday Luxury">
+      <div class="cat-label"><span class="cat-name">Everyday Luxury</span><span class="cat-count">12 items</span></div>
+    </div>
+    <div class="cat-card" onclick="scrollToSection('shop')">
+      <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/ACCESSORIES.png" alt="Accessories">
+      <div class="cat-label">
+        <span class="cat-name">Accessories</span>
+        <span class="cat-count">New Collection</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     LOOKBOOK
+══════════════════════════════════════════ -->
+<section class="section section-dark" id="lookbook">
+  <div class="sec-head">
+    <div>
+      <p class="sec-eye">Season 2025</p>
+      <h2 class="sec-title">THE LOOKBOOK</h2>
+    </div>
+    <a href="https://www.instagram.com/sap_design_co/" target="_blank" class="view-all">Follow @sap_design_co →</a>
+  </div>
+  <div class="lookbook-grid">
+    <div class="lk-card tall">
+      <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/hero.png" alt="Lookbook 1" style="height:100%;min-height:400px;">
+      <div class="lk-overlay"><span class="lk-tag">THE MIDNIGHT EDIT</span></div>
+    </div>
+    <div class="lk-card">
+      <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product.png" alt="Lookbook 2" style="height:280px;">
+      <div class="lk-overlay"><span class="lk-tag">WOMEN'S EDIT</span></div>
+    </div>
+    <div class="lk-card">
+      <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product2.png" alt="Lookbook 3" style="height:280px;">
+      <div class="lk-overlay"><span class="lk-tag">BOTTOMS</span></div>
+    </div>
+    <div class="lk-card">
+      <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product1.png" alt="Lookbook 4" style="height:280px;">
+      <div class="lk-overlay"><span class="lk-tag">SIGNATURE DRESSES</span></div>
+    </div>
+    <div class="lk-card">
+      <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product2.png" alt="Lookbook 5" style="height:280px;">
+      <div class="lk-overlay"><span class="lk-tag">NEW SEASON</span></div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:2.5rem;">
+    <a href="https://www.instagram.com/sap_design_co/" target="_blank" class="btn-red" style="display:inline-flex;align-items:center;gap:10px;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      See More on Instagram
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ABOUT
+══════════════════════════════════════════ -->
+<div class="about-split" id="about">
+  <div class="about-img">
+    <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/hero.png" alt="About SAP Design Store">
+  </div>
+  <div class="about-text">
+    <p class="sec-eye">Who We Are</p>
+    <h2>FASHION AS A <span>STATEMENT</span></h2>
+    <p>SAP Design Store was born in the heart of Cape Town with a single conviction: your clothes should say something. Not whisper — say something bold, confident, and unapologetically you.</p>
+    <p>We design for people who walk into a room and need no introduction. Every piece in our collection is built with intention, crafted with care, and cut for the kind of confidence that can't be faked.</p>
+    <p>From our Cape Town studio to your wardrobe — we handle every stitch, seam, and silhouette with pride. We manufacture locally, support South African makers, and reinvest in the communities that inspire our work.</p>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-grid">
+    <div><span class="stat-num">2019</span><span class="stat-lbl">Founded</span></div>
+    <div><span class="stat-num">5K+</span><span class="stat-lbl">Happy Customers</span></div>
+    <div><span class="stat-num">200+</span><span class="stat-lbl">Styles Available</span></div>
+    <div><span class="stat-num">100%</span><span class="stat-lbl">SA Owned</span></div>
+  </div>
+</div>
+
+<!-- VALUES -->
+<section class="section section-dark">
+  <p class="sec-eye">What Drives Us</p>
+  <h2 class="sec-title">OUR VALUES</h2>
+  <div class="values-grid">
+    <div class="val-card">
+      <div class="val-num">01</div>
+      <h3>BOLD BY DESIGN</h3>
+      <p>We never design safe. Every piece is a conversation starter — cut, coloured, and crafted to turn heads, hold attention, and make you feel like the main character every single day.</p>
+    </div>
+    <div class="val-card">
+      <div class="val-num">02</div>
+      <h3>QUALITY FIRST</h3>
+      <p>Fast fashion is not our lane. We source quality fabrics and work with skilled local manufacturers to build pieces that last — both in durability and in style.</p>
+    </div>
+    <div class="val-card">
+      <div class="val-num">03</div>
+      <h3>PROUDLY LOCAL</h3>
+      <p>We manufacture in South Africa, collaborate with local artists, and reinvest in the communities that inspire our collections. When you shop SAP, you support SA.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="section" style="background:#0d0d0d;padding:5rem 3rem;">
+  <div class="news-wrap">
+    <p class="sec-eye" style="text-align:center;">Stay in the Loop</p>
+    <h2 class="sec-title" style="text-align:center;font-size:clamp(1.9rem,4vw,3rem);">GET FIRST ACCESS</h2>
+    <p>New drops, exclusive deals, and style inspo — straight to your inbox. No spam, ever. Unsubscribe any time.</p>
+    <div class="email-row">
+      <input type="email" id="newsEmail" placeholder="your@email.com">
+      <button type="button" onclick="handleNewsletter(this)">Subscribe</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SIZING GUIDE
+══════════════════════════════════════════ -->
+<div class="size-guide" id="sizing">
+  <p class="sec-eye">Find Your Fit</p>
+  <h2 class="sec-title">SIZE GUIDE</h2>
+  <p style="margin-top:1rem;font-size:0.86rem;color:rgba(247,244,239,0.48);max-width:560px;line-height:1.85;">All measurements are in centimetres. If you're between sizes, we recommend sizing up for a relaxed fit or sizing down for a more tailored look. Still unsure? <a href="#contact" style="color:var(--accent);">Contact us</a> and we'll help.</p>
+
+  <div class="size-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Size</th><th>Chest (cm)</th><th>Waist (cm)</th><th>Hips (cm)</th><th>UK Size</th><th>US Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>XS</td><td>80–84</td><td>62–66</td><td>88–92</td><td>6–8</td><td>2–4</td></tr>
+        <tr><td>S</td><td>84–88</td><td>66–70</td><td>92–96</td><td>8–10</td><td>4–6</td></tr>
+        <tr><td>M</td><td>88–92</td><td>70–74</td><td>96–100</td><td>10–12</td><td>6–8</td></tr>
+        <tr><td>L</td><td>92–98</td><td>74–80</td><td>100–106</td><td>12–14</td><td>8–10</td></tr>
+        <tr><td>XL</td><td>98–104</td><td>80–86</td><td>106–112</td><td>14–16</td><td>10–12</td></tr>
+        <tr><td>XXL</td><td>104–112</td><td>86–94</td><td>112–120</td><td>16–18</td><td>12–14</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="size-notes">
+    <div class="size-note-card">
+      <h4>How to Measure</h4>
+      <p>Use a soft measuring tape and measure directly over your undergarments. Keep the tape snug but not tight. Chest: measure around the fullest part. Waist: measure at your natural waistline. Hips: measure around the fullest part of your hips.</p>
+    </div>
+    <div class="size-note-card">
+      <h4>Fit Notes</h4>
+      <p>Our dresses and tops are cut with a relaxed fit — they run slightly larger. Trousers and bottoms are true to size. Outerwear is designed to layer — we suggest sizing up if you plan to wear thick knitwear underneath.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SHIPPING & RETURNS
+══════════════════════════════════════════ -->
+<section class="section section-dark" id="shipping">
+  <p class="sec-eye">Delivery & Returns</p>
+  <h2 class="sec-title">SHIPPING & RETURNS</h2>
+  <div class="shipping-grid">
+    <div class="ship-card">
+      <div class="ship-icon"><svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+      <h3>STANDARD DELIVERY</h3>
+      <p>Orders are dispatched within 1–2 business days. Standard delivery across South Africa takes 3–5 business days via our courier partners. Free shipping on all orders over R800.</p>
+    </div>
+    <div class="ship-card">
+      <div class="ship-icon"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <h3>EXPRESS DELIVERY</h3>
+      <p>Need it fast? Express next-day delivery is available for Cape Town, Johannesburg, and Durban. Order before 12pm for same-day dispatch. Additional fee of R120 applies.</p>
+    </div>
+    <div class="ship-card">
+      <div class="ship-icon"><svg viewBox="0 0 24 24" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>
+      <h3>30-DAY RETURNS</h3>
+      <p>Not happy? Return any unworn, unwashed item in its original packaging within 30 days for a full refund or exchange. Simply contact us and we'll arrange a collection.</p>
+    </div>
+  </div>
+
+  <div style="max-width:720px;margin:4rem auto 0;">
+    <p class="sec-eye" style="margin-bottom:0.4rem;">Common Questions</p>
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.06em;margin-bottom:1.5rem;">FREQUENTLY ASKED</h3>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How do I track my order? <svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-a"><p>Once your order is dispatched, you'll receive a tracking number via WhatsApp or email. You can use this to track your parcel through our courier's website. If you haven't received a tracking number within 2 business days, please contact us.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Do you ship internationally? <svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-a"><p>Currently we ship within South Africa only. We're actively working on international shipping and aim to launch it in Q3 2025. Sign up to our newsletter or follow us on Instagram to be the first to know.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How do I return or exchange an item? <svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-a"><p>Contact us via WhatsApp or email within 30 days of receiving your order. Items must be unworn, unwashed, and in their original packaging with all tags attached. We'll arrange a collection and process your refund or exchange within 5 business days.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">What payment methods do you accept? <svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-a"><p>We accept EFT (direct bank transfer), Snapscan, Ozow, and PayFast (Visa & Mastercard). All online transactions are secured with SSL encryption. Payment details are sent once you submit your order via WhatsApp or email.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">What if my item arrives damaged? <svg viewBox="0 0 24 24" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+        <div class="faq-a"><p>We're sorry to hear that. Please photograph the damage and contact us within 48 hours of receiving your order. We'll arrange a replacement or full refund at no additional cost — no need to return the damaged item.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CONTACT
+══════════════════════════════════════════ -->
+<div class="contact-grid" id="contact">
+  <div class="contact-info">
+    <h2>GET IN<br>TOUCH</h2>
+    <div class="c-item">
+      <div class="c-icon"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+      <div><p class="c-lbl">Location</p><p class="c-val">Cape Town, Western Cape<br>South Africa</p></div>
+    </div>
+    <div class="c-item">
+      <div class="c-icon"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+      <div><p class="c-lbl">Email</p><p class="c-val"><a href="mailto:hello@sapdesignstore.co.za">hello@sapdesignstore.co.za</a></p></div>
+    </div>
+    <div class="c-item">
+      <div class="c-icon"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.26h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+      <div><p class="c-lbl">WhatsApp</p><p class="c-val"><a href="https://wa.me/27847001386">+27 84 700 1386</a><br><small style="color:var(--muted);font-size:0.75rem;">Mon–Fri, 9am–5pm</small></p></div>
+    </div>
+    <div class="social-links">
+      <a class="soc-btn" href="https://www.facebook.com/profile.php?id=100063587043419" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        <span>Facebook</span>
+      </a>
+      <a class="soc-btn" href="https://www.instagram.com/sap_design_co/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        <span>Instagram</span>
+      </a>
+    </div>
+    <div class="hours-box">
+      <h4>Response Hours</h4>
+      <div class="h-row"><span>Monday – Friday</span><span>9:00 – 17:00</span></div>
+      <div class="h-row"><span>Saturday</span><span>10:00 – 14:00</span></div>
+      <div class="h-row"><span>Sunday & Public Holidays</span><span>Closed</span></div>
+    </div>
+  </div>
+  <div class="contact-form">
+    <h2>SEND US A<br>MESSAGE</h2>
+    <form onsubmit="submitContact(event)">
+      <div class="f-row2">
+        <div class="f-group"><label class="f-label">First Name *</label><input class="f-input" type="text" placeholder="First name" required></div>
+        <div class="f-group"><label class="f-label">Last Name *</label><input class="f-input" type="text" placeholder="Last name" required></div>
+      </div>
+      <div class="f-group"><label class="f-label">Email *</label><input class="f-input" type="email" placeholder="your@email.com" required></div>
+      <div class="f-group"><label class="f-label">Topic</label>
+        <select class="f-input f-select">
+          <option value="" disabled selected>Select a topic…</option>
+          <option>Order Query</option><option>Returns & Exchanges</option>
+          <option>Product Information</option><option>Shipping & Delivery</option>
+          <option>Collaboration / Press</option><option>Other</option>
+        </select>
+      </div>
+      <div class="f-group"><label class="f-label">Message *</label><textarea class="f-input f-textarea" placeholder="How can we help?" required></textarea></div>
+      <button type="submit" class="btn-red" style="border:none;padding:0.9rem 2.4rem;">Send Message</button>
+      <div class="success-bar" id="successBar">✓ &nbsp;Message sent! We'll respond within 1–2 business days.</div>
+    </form>
+  </div>
+</div>
+
+<!-- MARQUEE BOTTOM -->
+<div class="marquee-bar">
+  <span class="marquee-inner">FREE SHIPPING OVER R800 &nbsp;✦&nbsp; NEW ARRIVALS EVERY WEEK &nbsp;✦&nbsp; EASY 30-DAY RETURNS &nbsp;✦&nbsp; SECURE PAYMENT &nbsp;✦&nbsp; PROUDLY SOUTH AFRICAN &nbsp;✦&nbsp; FREE SHIPPING OVER R800 &nbsp;✦&nbsp; NEW ARRIVALS EVERY WEEK &nbsp;✦&nbsp; EASY 30-DAY RETURNS &nbsp;✦&nbsp; SECURE PAYMENT &nbsp;✦&nbsp; PROUDLY SOUTH AFRICAN &nbsp;✦&nbsp;</span>
+</div>
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <img src="https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/logo22.png" alt="SAP Design Store" onerror="this.style.display='none'">
+      <div class="foot-brand-name">SAP <span>DESIGN</span></div>
+      <p>Bold clothing for the unapologetically stylish. Proudly South African — designed and made in Cape Town.</p>
+      <div class="foot-social">
+        <a class="foot-soc" href="https://www.facebook.com/profile.php?id=100063587043419" target="_blank" rel="noopener" title="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a class="foot-soc" href="https://www.instagram.com/sap_design_co/" target="_blank" rel="noopener" title="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#shop">New In</a></li>
+        <li><a href="#shop">Women</a></li>
+        <li><a href="#shop">Signature Dresses</a></li>
+        <li><a href="#shop">Accessories</a></li>
+        <li><a href="#shop">Sale</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Help</h4>
+      <ul>
+        <li><a href="#sizing">Size Guide</a></li>
+        <li><a href="#shipping">Shipping Info</a></li>
+        <li><a href="#shipping">Returns</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+        <li><a href="https://wa.me/27847001386" target="_blank">WhatsApp Us</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#lookbook">Lookbook</a></li>
+        <li><a href="https://www.instagram.com/sap_design_co/" target="_blank">Instagram</a></li>
+        <li><a href="https://www.facebook.com/profile.php?id=100063587043419" target="_blank">Facebook</a></li>
+        <li><a href="#contact">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <p>© 2025 SAP Design Store. All rights reserved. Cape Town, South Africa.</p>
+    <div class="foot-payments">
+      <span class="pay-badge">EFT</span>
+      <span class="pay-badge">Snapscan</span>
+      <span class="pay-badge">Ozow</span>
+      <span class="pay-badge">PayFast</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════ -->
+<script>
+/* ─── HERO SLIDESHOW ─── */
+let cur = 0;
+let slides, dots, timer;
+
+function goTo(n) {
+  slides[cur].classList.remove('active'); dots[cur].classList.remove('active');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active'); dots[cur].classList.add('active');
+  clearInterval(timer); timer = setInterval(nextSlide, 5500);
+}
+function nextSlide() { goTo(cur + 1); }
+function prevSlide() { goTo(cur - 1); }
+
+document.addEventListener('DOMContentLoaded', function() {
+  slides = document.querySelectorAll('.slide');
+  dots   = document.querySelectorAll('.dot');
+  timer  = setInterval(nextSlide, 5500);
+});
+
+/* ─── SMOOTH SCROLL HELPER (renamed to avoid conflict with window.scrollTo) ─── */
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ─── PRODUCTS DATA ─── */
+const PRODUCTS = [
+  { id:'p1', name:'Textured Embroidered Midi Dress', cat:'Women · Dresses', price:3500, oldPrice:null, badge:'New',
+    desc:'Relaxed and effortlessly chic — this Textured Embroidered Midi Dress is cut for comfort with a bold, contemporary edge. Features a dropped shoulder, side-split hem, and tortoiseshell buttons. Breathable linen blend, perfect for Cape Town summers.',
+    img:'https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product.png',
+    colours:[{name:'Ivory',hex:'#E8E0D4'},{name:'Black',hex:'#1a1a1a'},{name:'Dusty Rose',hex:'#C9908A'}],
+    sizes:['XS','S','M','L','XL'], soldOut:['XS'] },
+  { id:'p2', name:'Satin Embroidered Evening Gown', cat:'Signature Dresses · Outerwear', price:2500, oldPrice:3000, badge:'Sale',
+    desc:'Distressed raw-edge detailing meets a boxy silhouette. Washed for a lived-in vintage feel and built for layering over anything — tees, hoodies, or dress shirts. A wardrobe anchor piece.',
+    img:'https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product1.png',
+    colours:[{name:'Indigo',hex:'#2B4080'},{name:'Light Wash',hex:'#7B90B2'},{name:'Black',hex:'#1a1a1a'}],
+    sizes:['S','M','L','XL','XXL'], soldOut:[] },
+  { id:'p3', name:'Sleek faux leather finish', cat:'Women · Bottoms', price:1300, oldPrice:null, badge:'New',
+    desc:'Sleek, tailored leather trousers with a high-rise waist and clean straight-leg cut. Premium faux leather with a luxury hand feel — pairs effortlessly with the Midnight Edit collection.',
+    img:'https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product2.png',
+    colours:[{name:'Black',hex:'#1a1a1a'},{name:'Chocolate',hex:'#5C3A1E'}],
+    sizes:['XS','S','M','L','XL'], soldOut:['XL'] },
+  { id:'p4', name:'Patterned Draped Maxi Dress', cat:'Unisex · Accessories', price:1800, oldPrice:null, badge:null,
+    desc:'A structured 6-panel cap with a bold embroidered SAP Design wordmark across the front. Adjustable snap-back closure. Unisex fit — one size fits most. Available in three colourways.',
+    img:'https://raw.githubusercontent.com/zionlukoki-ux/sap-design-store/main/Product4.png',
+    colours:[{name:'Black',hex:'#1a1a1a'},{name:'White',hex:'#F7F4EF'},{name:'Red',hex:'#E63B2E'}],
+    sizes:['One Size'], soldOut:[] }
+];
+
+let mState = { id:null, colour:null, size:null };
+
+/* ─── MODAL ─── */
+function openModal(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  mState = { id, colour: p.colours[0].name, size: null };
+
+  document.getElementById('mCat').textContent   = p.cat;
+  document.getElementById('mName').textContent  = p.name;
+  document.getElementById('mPrice').textContent = 'R' + p.price.toLocaleString('en-ZA');
+  document.getElementById('mWas').textContent   = p.oldPrice ? 'R' + p.oldPrice.toLocaleString('en-ZA') : '';
+  document.getElementById('mDesc').textContent  = p.desc;
+  document.getElementById('swName').textContent = p.colours[0].name;
+  document.getElementById('szSelected').textContent = '';
+
+  const img = document.getElementById('modalImg');
+  img.src = p.img; img.alt = p.name;
+
+  document.getElementById('modalSwatches').innerHTML = p.colours.map((c,i) =>
+    `<button class="swatch${i===0?' active':''}" style="background:${c.hex};" title="${c.name}" onclick="selColour('${c.name}',this)"></button>`
+  ).join('');
+
+  document.getElementById('modalSizes').innerHTML = p.sizes.map(s =>
+    `<button class="sz-btn${p.soldOut.includes(s)?' out':''}" ${p.soldOut.includes(s)?'disabled':''} onclick="selSize('${s}',this)">${s}</button>`
+  ).join('');
+
+  document.getElementById('modalWrap').classList.add('open');
+  document.getElementById('backdrop').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalWrap').classList.remove('open');
+  if (!document.getElementById('cartSidebar').classList.contains('open')) {
+    document.getElementById('backdrop').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+}
+function selColour(name, el) {
+  mState.colour = name;
+  document.getElementById('swName').textContent = name;
+  document.querySelectorAll('#modalSwatches .swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+}
+function selSize(s, el) {
+  mState.size = s;
+  document.getElementById('szSelected').textContent = s;
+  document.querySelectorAll('#modalSizes .sz-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+function modalAddToCart() {
+  if (!mState.size) { alert('Please select a size.'); return; }
+  const p = PRODUCTS.find(x => x.id === mState.id);
+  Cart.add({ id:p.id, name:p.name, price:p.price, colour:mState.colour, size:mState.size, img:p.img });
+  closeModal();
+  openCart();
+}
+function wishToggle(btn) {
+  btn.style.color = btn.style.color === 'rgb(230, 59, 46)' ? '' : '#E63B2E';
+}
+
+/* ─── CART ─── */
+const Cart = (() => {
+  let items = [];
+
+  function total() { return items.reduce((s,i) => s + i.price * i.qty, 0); }
+  function count() { return items.reduce((s,i) => s + i.qty, 0); }
+
+  function add(p) {
+    const key = p.id + '-' + p.size + '-' + p.colour;
+    const ex = items.find(i => i.key === key);
+    if (ex) ex.qty++; else items.push({ ...p, key, qty:1 });
+    render(); updateBadge();
+  }
+  function remove(key) { items = items.filter(i => i.key !== key); render(); updateBadge(); }
+  function changeQty(key, d) {
+    const it = items.find(i => i.key === key);
+    if (!it) return;
+    it.qty = Math.max(1, it.qty + d);
+    render(); updateBadge();
+  }
+
+  function updateBadge() {
+    const c = count();
+    const el = document.getElementById('cartCount');
+    if (!el) return;
+    el.textContent = c;
+    el.style.display = c ? 'flex' : 'none';
+  }
+
+  function render() {
+    const itemsEl   = document.getElementById('cartItems');
+    const emptyEl   = document.getElementById('cartEmpty');
+    const detailsEl = document.getElementById('cartDetails');
+    const ftEl      = document.getElementById('cartFt');
+    const totEl     = document.getElementById('cartTotal');
+
+    if (!itemsEl) return;
+
+    if (!items.length) {
+      itemsEl.innerHTML = '';
+      emptyEl.style.display   = 'flex';
+      detailsEl.style.display = 'none';
+      ftEl.style.display      = 'none';
+      return;
+    }
+
+    emptyEl.style.display   = 'none';
+    detailsEl.style.display = 'block';
+    ftEl.style.display      = 'block';
+    totEl.textContent = 'R' + total().toLocaleString('en-ZA');
+
+    itemsEl.innerHTML = items.map(it => `
+      <div class="cart-item">
+        <div class="ci-img"><img src="${it.img}" alt="${it.name}" onerror="this.style.display='none'"></div>
+        <div>
+          <p class="ci-name">${it.name}</p>
+          <p class="ci-meta">${it.colour} &nbsp;|&nbsp; Size: ${it.size}</p>
+          <div class="qty-row">
+            <button class="qty-btn" onclick="Cart.changeQty('${it.key}',-1)">−</button>
+            <span class="qty-n">${it.qty}</span>
+            <button class="qty-btn" onclick="Cart.changeQty('${it.key}',1)">+</button>
+          </div>
+          <button class="rm-btn" onclick="Cart.remove('${it.key}')">Remove</button>
+        </div>
+        <span class="ci-price">R${(it.price * it.qty).toLocaleString('en-ZA')}</span>
+      </div>`).join('');
+  }
+
+  function getItems() { return items; }
+  function getTotal() { return total(); }
+  return { add, remove, changeQty, render, updateBadge, getItems, getTotal };
+})();
+
+/* ─── ORDER SUMMARY ─── */
+function buildOrderSummary() {
+  const name    = document.getElementById('custName').value.trim();
+  const phone   = document.getElementById('custPhone').value.trim();
+  const email   = document.getElementById('custEmail').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+
+  if (!name || !phone || !email || !address) {
+    alert('Please fill in all your details (Name, Phone, Email, Address) before placing your order.');
+    return null;
+  }
+
+  const items = Cart.getItems();
+  const total = Cart.getTotal();
+
+  let lines = `*SAP Design Store — New Order* 🛍️\n\n`;
+  lines += `*Customer Details*\n`;
+  lines += `Name: ${name}\nPhone: ${phone}\nEmail: ${email}\nAddress: ${address}\n\n`;
+  lines += `*Order Items*\n`;
+  items.forEach(it => {
+    lines += `• ${it.name} (${it.colour}, Size ${it.size}) x${it.qty} — R${(it.price * it.qty).toLocaleString('en-ZA')}\n`;
+  });
+  lines += `\n*Total: R${total.toLocaleString('en-ZA')}*\n`;
+  lines += `\n_(Awaiting payment confirmation)_`;
+  return lines;
+}
+
+/* ─── WHATSAPP ORDER ─── */
+function sendWhatsApp() {
+  const summary = buildOrderSummary();
+  if (!summary) return;
+  window.open(`https://wa.me/27847001386?text=${encodeURIComponent(summary)}`, '_blank');
+}
+
+/* ─── EMAIL ORDER ─── */
+function sendEmail() {
+  const summary = buildOrderSummary();
+  if (!summary) return;
+  const name = document.getElementById('custName').value.trim();
+  const subj = encodeURIComponent(`New Order from ${name} — SAP Design Store`);
+  const body = encodeURIComponent(summary);
+  window.open(`mailto:hello@sapdesignstore.co.za?subject=${subj}&body=${body}`, '_blank');
+}
+
+/* ─── CART OPEN/CLOSE ─── */
+function openCart() {
+  document.getElementById('cartSidebar').classList.add('open');
+  document.getElementById('backdrop').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeCart() {
+  document.getElementById('cartSidebar').classList.remove('open');
+  if (!document.getElementById('modalWrap').classList.contains('open')) {
+    document.getElementById('backdrop').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+}
+
+/* ─── MOBILE NAV ─── */
+function toggleMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  const btn = document.getElementById('hamburger');
+  const isOpen = nav.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  document.getElementById('backdrop').classList.toggle('show', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+function closeMobileNav() {
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('backdrop').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+/* ─── CLOSE ALL ─── */
+function closeAll() {
+  closeCart(); closeModal(); closeMobileNav();
+}
+
+/* ─── FAQ ACCORDION ─── */
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+/* ─── CONTACT FORM ─── */
+function submitContact(e) {
+  e.preventDefault();
+  const bar = document.getElementById('successBar');
+  bar.style.display = 'block';
+  e.target.reset();
+  setTimeout(() => { bar.style.display = 'none'; }, 6000);
+}
+
+/* ─── NEWSLETTER ─── */
+function handleNewsletter(btn) {
+  const inp = document.getElementById('newsEmail');
+  if (!inp || !inp.value || !inp.value.includes('@')) { if(inp) inp.focus(); return; }
+  btn.textContent = '✓ Subscribed!';
+  btn.style.background = '#2a7a2a';
+  inp.value = '';
+  setTimeout(() => { btn.textContent = 'Subscribe'; btn.style.background = ''; }, 4000);
+}
+</script>
+
+</body>
+</html>
