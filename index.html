@@ -63,8 +63,8 @@ nav ul a:hover { color: var(--accent); }
 .cs-options div { padding: 0.5rem 0.8rem; color: var(--white); cursor: pointer; transition: background 0.15s; white-space: nowrap; }
 .cs-options div:hover { background: var(--accent); color: var(--white); }
 .custom-select.open .cs-options { display: block; }
-@media(max-width:768px){ .switcher-wrap .custom-select { display: none; } }
 @media(max-width:768px){ .switcher-wrap { display: none; } }
+.mobile-nav .custom-select .cs-options { position: relative; top: 0; margin-top: 4px; }
 .nav-icon { width: 20px; height: 20px; stroke: rgba(247,244,239,0.65); fill: none; cursor: pointer; transition: stroke 0.2s; }
 .nav-icon:hover { stroke: var(--accent); }
 
@@ -494,16 +494,22 @@ footer { border-top: 1px solid var(--border); padding: 3.5rem 3rem 2rem; }
   <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shipping'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('shipping'), 350)">Shipping</a>
   <a href="#" ontouchend="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('contact'), 350)" onclick="event.preventDefault(); closeMobileNav(); setTimeout(()=>scrollToSection('contact'), 350)">Contact</a>
   <div style="display:flex;gap:0.8rem;padding:1rem 0;border-bottom:1px solid var(--border);margin-bottom:1rem;">
-    <select class="switcher" style="display:block;flex:1;" onchange="switchLang(this.value)" title="Language">
-      <option value="en">🇬🇧 English</option>
-      <option value="fr">🇫🇷 Français</option>
-    </select>
-    <select class="switcher" style="display:block;flex:1;" onchange="switchCurrency(this.value)" title="Currency">
-      <option value="ZAR">ZAR R</option>
-      <option value="USD">USD $</option>
-      <option value="EUR">EUR €</option>
-      <option value="GBP">GBP £</option>
-    </select>
+    <div class="custom-select" id="langDropMob" style="flex:1;">
+      <div class="cs-selected" style="width:100%;text-align:center;" onclick="toggleDrop('langDropMob')">🇬🇧 English</div>
+      <div class="cs-options" style="width:100%;">
+        <div onclick="switchLang('en'); setDrop('langDropMob','🇬🇧 English')">🇬🇧 English</div>
+        <div onclick="switchLang('fr'); setDrop('langDropMob','🇫🇷 Français')">🇫🇷 Français</div>
+      </div>
+    </div>
+    <div class="custom-select" id="currDropMob" style="flex:1;">
+      <div class="cs-selected" style="width:100%;text-align:center;" onclick="toggleDrop('currDropMob')">ZAR R</div>
+      <div class="cs-options" style="width:100%;">
+        <div onclick="switchCurrency('ZAR'); setDrop('currDropMob','ZAR R')">ZAR R</div>
+        <div onclick="switchCurrency('USD'); setDrop('currDropMob','USD $')">USD $</div>
+        <div onclick="switchCurrency('EUR'); setDrop('currDropMob','EUR €')">EUR €</div>
+        <div onclick="switchCurrency('GBP'); setDrop('currDropMob','GBP £')">GBP £</div>
+      </div>
+    </div>
   </div>
   <div class="mobile-social">
     <a href="https://www.facebook.com/profile.php?id=100063587043419" target="_blank" rel="noopener" title="Facebook">
